@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
+            "name": "Initialize Database",
+            "type": "python",
+            "request": "launch",
+            "program": "./secma_core/db/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "sqlite:///./playground/database/debug.db"
+            ]
+        },
+        {
+            "name": "Run server",
+            "type": "python",
+            "pythonArgs": ["-W", "error::DeprecationWarning"],
+            "request": "launch",
+            "program": "./secma_core/server/main.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+              "SECURITY_MACHINE_TABLE_PREFIX": "secma_",
+              "SECURITY_MACHINE_DATABASE__DB__URL": "sqlite+aiosqlite:///./playground/database/debug.db",
+              "SECURITY_MACHINE_MANAGEMENT__TOKEN_SECRET": "123456",
+              "SECURITY_MACHINE_MANAGEMENT__SUPER_PASSWORD": "123456",
+              "SECURITY_MACHINE_CONFIG": "./secma_core/server/default-config.yaml",
+              "SQLALCHEMY_WARN_20": "1"
+            }
+        }
+    ]
+}

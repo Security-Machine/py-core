@@ -1,0 +1,14 @@
+.venv/
+/venv
+__pycache__/
+/build
+/dist
+/*.egg-info
+/htmlcov
+/playground
+/.pytest_cache
+/.mypy_cache
+/.coverage
+/.vscode
+.git/
+*_test.py

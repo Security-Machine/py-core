@@ -1,0 +1,112 @@
+[project]
+name = "security-machine"
+dynamic = ["version"]
+# version = "0.0.1"
+description = "A http server providing base for authenthication and authorization."
+authors = [{name = "Nicu Tofan", email = "nicu.tofan@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "SQLAlchemy==2.0.23",
+    "alembic==1.12.1",
+    "db4me==0.1.0",
+    "attrs==23.1.0",
+    "aiosqlite==0.19.0",
+]
+
+
+[project.optional-dependencies]
+server = [
+    "passlib[bcrypt]==1.7.4",
+    "fastapi==0.104.1",
+    "log4me==0.1.0",
+    "pydantic_settings==2.1.0",
+    "pydantic-settings-yaml==0.2.0",
+    "pydantic==2.5.2",
+    "python-jose[cryptography]==3.3.0",
+    "python-multipart==0.0.6",
+    "uvicorn[standard]",
+]
+dev = [
+    "black",
+    "flake8",
+    "isort",
+    "mypy",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest",
+    "twine",
+    "wheel",
+]
+tests = [
+    "black",
+    "flake8",
+    "isort",
+    "mypy",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest",
+    "twine",
+    "uvicorn[standard]",
+    "wheel",
+]
+
+
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=67.0", "setuptools_scm[toml]>=8"]
+
+
+[tool.setuptools]
+include-package-data = true
+
+
+[tool.setuptools.packages.find]
+exclude = ["venv*", "scripts", "playground", "tests"]
+
+
+[tool.setuptools_scm]
+fallback_version = "0.0.0-dev"
+write_to = "secma_core/__version__.py"
+
+
+[tool.isort]
+
+# Make isort compatible with black
+profile = "black"
+
+skip = ["*_test.py", "test_*", "*_tests.py", "tests_*"]
+src_paths = "secma_core"
+known_first_party = "secma_core"
+
+
+[tools.black]
+
+# Standard black line length is 88
+line-length = 80
+
+# Python versions that should be supported by Black's output
+target-version = ['py39', 'py310', 'py311']
+
+
+[tool.pytest.ini_options]
+testpaths = [
+    "secma_core",
+]
+
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = [".+_test.py", "test_.+", ".+_tests.py", "tests_.+"]
+
+
+[tool.flake8]
+max-line-length = 80
+docstring-convention = "google"
+exclude = ["*_test.py", "test_*", "*_tests.py", "tests_*"]
+extend-ignore = "E203, E501, E704"

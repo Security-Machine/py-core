@@ -1,0 +1,96 @@
+# Logging settings.
+log:
+    # The level to use for the console output.
+    console_level: 10
+
+    # The level to use for the file output.
+    file_level: 10
+
+    # The path where the log file should be created.
+    # Can contain the following placeholders:
+    # - %date%: The current date in the format YYYY-MM-DD.
+    # - %time%: The current time in the format HH-MM-SS.
+    # - %Y%: The current year.
+    # - %M%: The current month.
+    # - %D%: The current day.
+    # - %H%: The current hour.
+    # - %m%: The current minute.
+    # - %s%: The current second.
+    # - %ms%: The current microsecond.
+    # If None logging is disabled.
+    file_path: ./playground/logs/%date%.log
+
+    # Should the file be opened in overwrite mode or append mode?
+    file_override: false
+
+    # The base logger (used with `getLogger()`).
+    base: secma
+
+    others:
+        aiosqlite: 1
+
+# Database settings.
+database:
+
+    # Common settings for all database types.
+    db:
+        # Database URL
+        url: sqlite+aiosqlite:///file:defaultSecMa?mode=memory&cache=shared&uri=true
+
+        # Database echo
+        echo:  true
+
+        # Database pool size
+        pool_size:  10
+
+        # Database pool recycle
+        pool_recycle:  3600
+
+        # Database pool pre ping
+        pool_pre_ping:  true
+
+        # Database pool reset on return
+        pool_reset_on_return:  rollback
+
+    # Settings for connections to postgres databases.
+    pg_db:
+        max_overflow: 10
+        pool_timeout: 30
+
+    # sqlite_db:
+        # Arguments to be passed to the sqlite3.connect() function.
+        # connect_args:
+
+management:
+    # The algorithm used to sign the JWT tokens.
+    token_algorithm: HS256
+
+    # The expiration time of the JWT tokens in minutes.
+    token_expiration: 30
+
+    # The name of the super role that will get all known permissions.
+    super_role: super
+
+    # The name of the user.
+    super_user: super-user
+
+net:
+    # The origins allowed to make CORS requests.
+    cors_origins:
+        - http://localhost:4200
+        - http://127.0.0.1:4200
+
+    # Whether to allow credentials in CORS requests.
+    cors_allow_credentials: true
+
+    # The methods allowed in CORS requests.
+    cors_allow_methods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
+        - OPTIONS
+
+    # The headers allowed in CORS requests.
+    cors_allow_headers:
+        - "*"

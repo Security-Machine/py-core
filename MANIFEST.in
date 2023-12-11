@@ -1,0 +1,11 @@
+
+exclude ./.coveragerc
+exclude ./.dockerignore
+exclude ./.editorconfig
+exclude ./.gitignore
+exclude ./.pre-commit-config.yaml
+exclude ./.readthedocs.yml
+exclude ./Dockerfile
+exclude ./Makefile
+exclude ./.vscode/launch.json
+exclude ./.vscode/settings.json

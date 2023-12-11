@@ -1,0 +1,14 @@
+{
+    "cSpell.words": [
+        "aiosqlite",
+        "autoflush",
+        "joinedload",
+        "onupdate",
+        "passlib",
+        "primaryjoin",
+        "secma",
+        "secondaryjoin",
+        "selectinload",
+        "sessionmaker"
+    ]
+}
