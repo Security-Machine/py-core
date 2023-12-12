@@ -11,7 +11,7 @@ classifiers = [
 dependencies = [
   "SQLAlchemy==2.0.23",
   "alembic==1.12.1",
-  "db4me>=0.0.1",
+  "db4me>=0.1.0",
   "attrs==23.1.0",
   "aiosqlite==0.19.0",
 ]
@@ -47,7 +47,7 @@ docs = [
 ]
 server = [
   "fastapi==0.104.1",
-  "log2me>=0.0.1",
+  "log2me>=0.1.0",
   "passlib[bcrypt]==1.7.4",
   "pydantic_settings==2.1.0",
   "pydantic-settings-yaml==0.2.0",
