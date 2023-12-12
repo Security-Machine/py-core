@@ -42,6 +42,7 @@ dev = [
     "pytest",
     "twine",
     "wheel",
+    "pyproject-flake8",
 ]
 tests = [
     "black",
@@ -54,6 +55,18 @@ tests = [
     "twine",
     "uvicorn[standard]",
     "wheel",
+    "pyproject-flake8",
+]
+docs = [
+    "mkdocs",
+    "markdown-include",
+    "mkdocs-material",
+    "mkdocs-material[imaging]",
+    "mkdocstrings",
+    "mkdocstrings[python]",
+    "pymdown-extensions",
+    "pillow",
+    "cairosvg",
 ]
 
 
@@ -67,11 +80,11 @@ include-package-data = true
 
 
 [tool.setuptools.packages.find]
-exclude = ["venv*", "scripts", "playground", "tests"]
+exclude = ["venv*", "scripts", "playground", "tests", "docs", "build", "dist"]
 
 
 [tool.setuptools_scm]
-fallback_version = "0.0.0-dev"
+fallback_version = "0.0.1-dev"
 write_to = "secma_core/__version__.py"
 
 
@@ -80,12 +93,17 @@ write_to = "secma_core/__version__.py"
 # Make isort compatible with black
 profile = "black"
 
-skip = ["*_test.py", "test_*", "*_tests.py", "tests_*"]
+skip = [
+    "test_*.py", "*_test.py",
+    "tests_*.py", "*_tests.py",
+    "spec_*.py", "*_spec.py",
+    "specs_*.py", "*_specs.py",
+]
 src_paths = "secma_core"
 known_first_party = "secma_core"
 
 
-[tools.black]
+[tool.black]
 
 # Standard black line length is 88
 line-length = 80
@@ -98,15 +116,31 @@ target-version = ['py39', 'py310', 'py311']
 testpaths = [
     "secma_core",
 ]
+python_files = [
+    "test_*.py", "*_test.py",
+    "tests_*.py", "*_tests.py",
+    "spec_*.py", "*_spec.py",
+    "specs_*.py", "*_specs.py",
+]
+python_classes = ["Test", "Acceptance"]
+python_functions = ["test"]
 
 
 [tool.mypy]
 ignore_missing_imports = true
-exclude = [".+_test.py", "test_.+", ".+_tests.py", "tests_.+"]
+exclude = [
+    ".+_tests?.py", "tests?_.+",
+    ".+_specs?.py", "specs?_.+"
+]
 
 
 [tool.flake8]
 max-line-length = 80
 docstring-convention = "google"
-exclude = ["*_test.py", "test_*", "*_tests.py", "tests_*"]
+exclude = [
+    "test_*.py", "*_test.py",
+    "tests_*.py", "*_tests.py",
+    "spec_*.py", "*_spec.py",
+    "specs_*.py", "*_specs.py",
+]
 extend-ignore = "E203, E501, E704"

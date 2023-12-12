@@ -18,11 +18,11 @@ class HtmlError(Exception):
     """
 
     def __init__(
-            self,
-            status_code: int,
-            data: ErrorResponse,
-            headers: Optional[Dict[str, str]] = None
-        ):
+        self,
+        status_code: int,
+        data: ErrorResponse,
+        headers: Optional[Dict[str, str]] = None,
+    ):
         self.data = data
         self.status_code = status_code
         self.headers = headers
@@ -33,7 +33,7 @@ class HtmlError(Exception):
         return self.data.message
 
     @property
-    def detail(self) -> int:
+    def detail(self) -> ErrorResponse:
         """Return the message body."""
         return self.data
 
@@ -42,5 +42,5 @@ class HtmlError(Exception):
         return JSONResponse(
             content=self.data.model_dump(),
             status_code=self.status_code,
-            headers=self.headers
+            headers=self.headers,
         )

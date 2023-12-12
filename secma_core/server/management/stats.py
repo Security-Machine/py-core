@@ -47,9 +47,11 @@ class StatisticsReply(BaseModel):
     )
 
 
-@router.get("/stats", response_model=StatisticsReply, dependencies=[
-    CoreSecurity("stats:r")
-])
+@router.get(
+    "/stats",
+    response_model=StatisticsReply,
+    dependencies=[CoreSecurity("stats:r")],
+)
 async def api_version(context: ContextDep) -> StatisticsReply:
     """Return the API version."""
     # Query the database.

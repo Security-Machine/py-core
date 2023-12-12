@@ -1,35 +1,25 @@
 from typing import Any, Dict, Optional
+
 from fastapi.responses import JSONResponse
 
 from secma_core.schemas.errors import ErrorResponse
 
-
 messages = {
-    "duplicate-app": (
-        "An application with a `{appSlug}` slug already exists."
-    ),
-    "no-role": (
-        "No role with a `{roleId}` ID was found withing this tenant."
-    ),
-    "no-app": (
-        "No application with a `{appSlug}` slug was found."
-    ),
-    "no-user": (
-         "No user with a `{userId}` ID was found withing this tenant."
-    ),
+    "duplicate-app": ("An application with a `{appSlug}` slug already exists."),
+    "no-role": ("No role with a `{roleId}` ID was found withing this tenant."),
+    "no-app": ("No application with a `{appSlug}` slug was found."),
+    "no-user": ("No user with a `{userId}` ID was found withing this tenant."),
     "invalid-credentials": (
         "Could not validate credentials (trace ID: {uniqueId})."
     ),
-    "no-permission": (
-        "Not enough permissions (trace ID: {uniqueId})."
-    ),
+    "no-permission": ("Not enough permissions (trace ID: {uniqueId})."),
 }
 
 
 def get_err(
-        code: str,
-        params: Optional[Dict[str, Any]] = None,
-        field: Optional[str] = None
+    code: str,
+    params: Optional[Dict[str, Any]] = None,
+    field: Optional[str] = None,
 ) -> ErrorResponse:
     """Get an error model from a code.
 
@@ -45,19 +35,14 @@ def get_err(
     message = messages[code]
     if params:
         message = message.format(**params)
-    return ErrorResponse(
-        message=message,
-        code=code,
-        field=field,
-        params=params
-    )
+    return ErrorResponse(message=message, code=code, field=field, params=params)
 
 
 def get_json_err(
-        status_code: int,
-        message_code: str,
-        params: Optional[Dict[str, Any]] = None,
-        field: Optional[str] = None
+    status_code: int,
+    message_code: str,
+    params: Optional[Dict[str, Any]] = None,
+    field: Optional[str] = None,
 ) -> JSONResponse:
     """Creates a json response from an error code.
 
@@ -71,8 +56,6 @@ def get_json_err(
     return JSONResponse(
         status_code=status_code,
         content=get_err(
-            code=message_code,
-            params=params,
-            field=field
-        ).model_dump()
+            code=message_code, params=params, field=field
+        ).model_dump(),
     )

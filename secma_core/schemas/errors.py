@@ -13,6 +13,7 @@ class ErrorResponse(BaseModel):
         field: The field that caused the error, if any.
         params: The parameters to be used to reconstruct the message.
     """
+
     message: str
     code: Optional[str]
     field: Optional[str]

@@ -21,6 +21,8 @@ init:
 	python -m pip install --upgrade pip
 	python -m pip install -e .[dev]
 	python -m pip install -e .[server]
+	python -m pip install -e .[docs]
+	pre-commit install
 
 
 run:
@@ -30,7 +32,7 @@ run:
 		--port 8989
 
 
-all: lint test
+all: test build build-docs
 
 
 sdist:
@@ -43,13 +45,13 @@ sdist:
 
 lint:
 	@python -m isort --check $(MODULE_NAME)  ||  echo "isort:   FAILED!"
-	@python -m black --check --line-length=79 --quiet $(MODULE_NAME) || echo "black:   FAILED!"
-	@python -m flake8 $(MODULE_NAME)  || echo "flake8:  FAILED!"
+	@python -m black --check --quiet $(MODULE_NAME) || echo "black:   FAILED!"
+	@python -m pflake8 $(MODULE_NAME)  || echo "flake8:  FAILED!"
 
 
 delint:
 	python -m isort $(MODULE_NAME)
-	python -m black --line-length=79 $(MODULE_NAME)
+	python -m black $(MODULE_NAME)
 
 
 typecheck:
@@ -62,3 +64,14 @@ test: lint typecheck
 		--cov-report html \
 		--cov-config=.coveragerc \
 		--cov=$(MODULE_NAME) $(MODULE_NAME)/
+
+build-dist:
+	python -m build
+
+
+build-docs:
+	python -m mkdocs build
+
+
+view-docs:
+	python -m mkdocs serve

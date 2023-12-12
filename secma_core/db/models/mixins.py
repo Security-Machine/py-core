@@ -1,11 +1,13 @@
 from datetime import datetime
-from typing import TYPE_CHECKING, Optional, Set
+from typing import Optional
 
-from sqlalchemy import DateTime, FetchedValue, ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import FetchedValue, func
+from sqlalchemy.orm import Mapped, mapped_column
 
 
 class Common:
+    """Common columns for all tables."""
+
     id: Mapped[int] = mapped_column(
         primary_key=True, comment="Unique ID of this record"
     )
@@ -15,7 +17,7 @@ class Common:
     created: Mapped[datetime] = mapped_column(
         comment="The moment when this record was created.",
         default=func.now(),
-        server_default=FetchedValue()
+        server_default=FetchedValue(),
     )
     updated: Mapped[datetime] = mapped_column(
         comment="The last time when this record was updated.",

@@ -1,14 +1,20 @@
-
-
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    field_validator,
+    model_validator,
+)
 
 from secma_core.server.utils import SlugField, slug_is_valid
 
 
 class Common(BaseModel):
     """Common fields for input an output."""
+
     slug: str = SlugField
 
     title: Optional[str] = Field(
@@ -58,7 +64,7 @@ class ApplicationInput(Common):
         """Validate the slug."""
         return slug_is_valid(v)
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def model_validation(self):
         """Use the slug as title if not provided."""
         if not self.title:

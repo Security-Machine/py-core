@@ -96,6 +96,14 @@ python -m pip install -e .[dev]
 python -m pip install -e .[server]
 ```
 
+On Windows, to be able to serve the documentation, you may also need to
+install the `cairo2` package:
+
+```bash
+pip install pipwin
+pipwin install cairocffi
+```
+
 To run the server you have to launch the `secma_core.server.main` script.
 You have a few ways of doing that:
 

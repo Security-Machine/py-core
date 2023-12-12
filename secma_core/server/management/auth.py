@@ -6,8 +6,8 @@ from fastapi.security import OAuth2PasswordRequestForm, SecurityScopes
 from jose import jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
-from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.exc import NoResultFound
 
 from secma_core.db.models.role import Role
 from secma_core.db.models.user import User

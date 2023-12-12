@@ -28,7 +28,8 @@ class Tenant(Common, Base):
     __table_suffix__ = "tenants"
     title: Mapped[Optional[str]] = mapped_column(
         String(255),
-        comment="A title for the application.", default=None,
+        comment="A title for the application.",
+        default=None,
     )
     slug: Mapped[str] = mapped_column(
         index=True, comment="Tenant unique slug used in URLs."

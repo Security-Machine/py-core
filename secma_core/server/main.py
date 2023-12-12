@@ -9,8 +9,8 @@ from typing import Awaitable, Callable, Optional, cast
 from uuid import uuid4
 
 from fastapi import FastAPI, Request, Response
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from fastapi.utils import is_body_allowed_for_status_code
 from log4me import setup_logging
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
@@ -106,6 +106,7 @@ async def html_exception_handler(request: Request, exc: HtmlError):
     if not is_body_allowed_for_status_code(exc.status_code):
         return Response(status_code=exc.status_code, headers=exc.headers)
     return exc.to_response()
+
 
 @app.exception_handler(Exception)
 async def exception_handler(request: Request, exc: Exception):

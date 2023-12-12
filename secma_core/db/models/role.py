@@ -55,17 +55,13 @@ class Role(Common, Base):
         secondary=perm2role,
         back_populates="roles",
         primaryjoin=f"Role.id == {tables_prefix}perm2role.c.role_id",
-        secondaryjoin=(
-            f"{tables_prefix}perm2role.c.perm_id == Permission.id"
-        ),
+        secondaryjoin=(f"{tables_prefix}perm2role.c.perm_id == Permission.id"),
     )
     users: Mapped[Set["User"]] = relationship(
         secondary=user2role,
         back_populates="roles",
         primaryjoin=f"Role.id == {tables_prefix}user2role.c.role_id",
-        secondaryjoin=(
-            f"{tables_prefix}user2role.c.user_id == User.id"
-        ),
+        secondaryjoin=(f"{tables_prefix}user2role.c.user_id == User.id"),
     )
 
     def __repr__(self):

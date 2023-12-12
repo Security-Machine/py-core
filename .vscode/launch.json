@@ -13,6 +13,15 @@
             "justMyCode": false
         },
         {
+            "name": "Python: Debug Tests",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "purpose": ["debug-test"],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        },
+        {
             "name": "Initialize Database",
             "type": "python",
             "request": "launch",

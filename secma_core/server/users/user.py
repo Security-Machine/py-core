@@ -61,8 +61,7 @@ def duplicate_user(user_name: str):
 
 
 @my_router.get(
-    "/", response_model=List[int],
-    dependencies=[CoreSecurity("users:r")]
+    "/", response_model=List[int], dependencies=[CoreSecurity("users:r")]
 )
 async def get_users(
     context: ContextDep,
@@ -77,8 +76,12 @@ async def get_users(
 
 
 @my_router.put(
-    "/", responses={**e409}, response_model=UserData,
-    dependencies=[CoreSecurity("user:c"), ]
+    "/",
+    responses={**e409},
+    response_model=UserData,
+    dependencies=[
+        CoreSecurity("user:c"),
+    ],
 )
 async def create_user(
     context: ContextDep,
@@ -102,8 +105,12 @@ async def create_user(
 
 
 @my_router.get(
-    "/{user_id}", responses={**e404}, response_model=UserData,
-    dependencies=[CoreSecurity("user:r"), ]
+    "/{user_id}",
+    responses={**e404},
+    response_model=UserData,
+    dependencies=[
+        CoreSecurity("user:r"),
+    ],
 )
 async def get_user(
     context: ContextDep,
@@ -138,8 +145,12 @@ async def get_user(
 
 
 @my_router.post(
-    "/{user_id}", responses={**e404, **e409}, response_model=UserData,
-    dependencies=[CoreSecurity("user:u"), ]
+    "/{user_id}",
+    responses={**e404, **e409},
+    response_model=UserData,
+    dependencies=[
+        CoreSecurity("user:u"),
+    ],
 )
 async def edit_user(
     context: ContextDep,
@@ -174,8 +185,12 @@ async def edit_user(
 
 
 @my_router.delete(
-    "/{user_id}", responses={**e404}, response_model=UserData,
-    dependencies=[CoreSecurity("user:d"), ]
+    "/{user_id}",
+    responses={**e404},
+    response_model=UserData,
+    dependencies=[
+        CoreSecurity("user:d"),
+    ],
 )
 async def delete_user(
     context: ContextDep,

@@ -71,9 +71,9 @@ def duplicate_perm(perm_name: str):
     )
 
 
-@my_router.get("/", response_model=List[int], dependencies=[
-    CoreSecurity("perms:r")
-])
+@my_router.get(
+    "/", response_model=List[int], dependencies=[CoreSecurity("perms:r")]
+)
 async def get_permissions(
     context: ContextDep,
     app_slug: AppSlugArg,
@@ -81,16 +81,16 @@ async def get_permissions(
 ):
     """Get a list of all unique permission IDs in a tenant."""
     results = await context.session.scalars(
-        select_perm_by_slug(app_slug, tn_slug).options(
-            load_only(Permission.id)
-        )
+        select_perm_by_slug(app_slug, tn_slug).options(load_only(Permission.id))
     )
     return [x.id for x in results]
 
 
 @my_router.put(
-    "/", responses={**e409}, response_model=PermData,
-    dependencies=[CoreSecurity("perm:c")]
+    "/",
+    responses={**e409},
+    response_model=PermData,
+    dependencies=[CoreSecurity("perm:c")],
 )
 async def create_permission(
     context: ContextDep,
@@ -114,8 +114,10 @@ async def create_permission(
 
 
 @my_router.get(
-    "/{perm_id}", responses={**e404}, response_model=PermData,
-    dependencies=[CoreSecurity("perm:r")]
+    "/{perm_id}",
+    responses={**e404},
+    response_model=PermData,
+    dependencies=[CoreSecurity("perm:r")],
 )
 async def get_permission(
     context: ContextDep,
@@ -135,8 +137,10 @@ async def get_permission(
 
 
 @my_router.post(
-    "/{perm_id}", responses={**e404, **e409}, response_model=PermData,
-    dependencies=[CoreSecurity("perm:u")]
+    "/{perm_id}",
+    responses={**e404, **e409},
+    response_model=PermData,
+    dependencies=[CoreSecurity("perm:u")],
 )
 async def edit_permission(
     context: ContextDep,
@@ -171,8 +175,10 @@ async def edit_permission(
 
 
 @my_router.delete(
-    "/{perm_id}", responses={**e404}, response_model=PermData,
-    dependencies=[CoreSecurity("perm:d")]
+    "/{perm_id}",
+    responses={**e404},
+    response_model=PermData,
+    dependencies=[CoreSecurity("perm:d")],
 )
 async def delete_permission(
     context: ContextDep,

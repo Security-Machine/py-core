@@ -60,9 +60,9 @@ def duplicate_tenant(tn_slug: str):
     )
 
 
-@router.get("/", response_model=List[str], dependencies=[
-    CoreSecurity("tenants:r")
-])
+@router.get(
+    "/", response_model=List[str], dependencies=[CoreSecurity("tenants:r")]
+)
 async def get_tenants(context: ContextDep, app_slug: AppSlugArg):
     """Get a list of all unique tenant slugs available in this application."""
     results = await context.session.scalars(
@@ -75,8 +75,10 @@ async def get_tenants(context: ContextDep, app_slug: AppSlugArg):
 
 
 @router.put(
-    "/", responses={**e409}, response_model=TenantData,
-    dependencies=[CoreSecurity("tenant:c")]
+    "/",
+    responses={**e409},
+    response_model=TenantData,
+    dependencies=[CoreSecurity("tenant:c")],
 )
 async def create_tenant(
     context: ContextDep,
@@ -102,8 +104,10 @@ async def create_tenant(
 
 
 @router.get(
-    "/{tn_slug}", responses={**e404}, response_model=TenantData,
-    dependencies=[CoreSecurity("tenant:r")]
+    "/{tn_slug}",
+    responses={**e404},
+    response_model=TenantData,
+    dependencies=[CoreSecurity("tenant:r")],
 )
 async def get_tenant(
     context: ContextDep,
@@ -127,8 +131,10 @@ async def get_tenant(
 
 
 @router.post(
-    "/{tn_slug}", responses={**e404, **e409}, response_model=TenantData,
-    dependencies=[CoreSecurity("tenant:u")]
+    "/{tn_slug}",
+    responses={**e404, **e409},
+    response_model=TenantData,
+    dependencies=[CoreSecurity("tenant:u")],
 )
 async def edit_tenant(
     context: ContextDep,
@@ -168,8 +174,10 @@ async def edit_tenant(
 
 
 @router.delete(
-    "/{tn_slug}", responses={**e404}, response_model=TenantData,
-    dependencies=[CoreSecurity("tenant:d")]
+    "/{tn_slug}",
+    responses={**e404},
+    response_model=TenantData,
+    dependencies=[CoreSecurity("tenant:d")],
 )
 async def delete_tenant(
     context: ContextDep, app_slug: AppSlugArg, tn_slug: str

@@ -1,3 +1,4 @@
+from logging import Logger
 from typing import Annotated
 
 from attrs import define
@@ -41,6 +42,7 @@ async def get_user_context(
         The context.
     """
     session: AsyncSession = request.state.session
+    logger: Logger = request.state.logger
 
     # Locate requested user.
     user_query = await session.execute(
@@ -56,6 +58,7 @@ async def get_user_context(
         request=request,
         session=session,
         settings=request.state.settings,
+        logger=logger,
         app_slug=app_slug,
         tn_slug=tn_slug,
         user=user,

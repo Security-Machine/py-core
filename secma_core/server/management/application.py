@@ -1,11 +1,7 @@
-from datetime import datetime
-from typing import List, Optional, Union, cast
+from typing import List, Union, cast
 
 from fastapi import APIRouter, Body, Path
 from fastapi.responses import JSONResponse
-from pydantic import (
-    BaseModel, ConfigDict, field_validator, Field, model_validator
-)
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -16,12 +12,7 @@ from secma_core.db.models.application import Application
 from secma_core.schemas.application import ApplicationData, ApplicationInput
 from secma_core.server.dependencies.auth import CoreSecurity
 from secma_core.server.dependencies.context import ContextDep
-from secma_core.server.utils import (
-    SlugField,
-    duplicate_app,
-    no_app,
-    slug_is_valid,
-)
+from secma_core.server.utils import duplicate_app, no_app
 
 from ..constants import e404, e409
 from . import router
@@ -31,9 +22,9 @@ my_router = APIRouter(
 )
 
 
-@my_router.get("/", response_model=List[str], dependencies=[
-    CoreSecurity("apps:r")
-])
+@my_router.get(
+    "/", response_model=List[str], dependencies=[CoreSecurity("apps:r")]
+)
 async def get_apps(context: ContextDep):
     """Get a list of all unique application slugs available to this core."""
 
@@ -44,8 +35,12 @@ async def get_apps(context: ContextDep):
 
 
 @my_router.put(
-    "/", responses={**e409}, response_model=ApplicationData,
-    dependencies=[CoreSecurity("app:c"), ]
+    "/",
+    responses={**e409},
+    response_model=ApplicationData,
+    dependencies=[
+        CoreSecurity("app:c"),
+    ],
 )
 async def create_app(
     context: ContextDep,
@@ -86,8 +81,12 @@ async def create_app(
 
 
 @my_router.get(
-    "/{app_slug}", responses={**e404}, response_model=ApplicationData,
-    dependencies=[CoreSecurity("app:r"), ]
+    "/{app_slug}",
+    responses={**e404},
+    response_model=ApplicationData,
+    dependencies=[
+        CoreSecurity("app:r"),
+    ],
 )
 async def get_app(
     context: ContextDep,
@@ -105,8 +104,12 @@ async def get_app(
 
 
 @my_router.post(
-    "/{app_slug}", responses={**e404, **e409}, response_model=ApplicationData,
-    dependencies=[CoreSecurity("app:u"), ]
+    "/{app_slug}",
+    responses={**e404, **e409},
+    response_model=ApplicationData,
+    dependencies=[
+        CoreSecurity("app:u"),
+    ],
 )
 async def edit_app(
     context: ContextDep,
@@ -142,8 +145,12 @@ async def edit_app(
 
 
 @my_router.delete(
-    "/{app_slug}", responses={**e404}, response_model=ApplicationData,
-    dependencies=[CoreSecurity("app:d"), ]
+    "/{app_slug}",
+    responses={**e404},
+    response_model=ApplicationData,
+    dependencies=[
+        CoreSecurity("app:d"),
+    ],
 )
 async def delete_app(context: ContextDep, app_slug: str):
     """Delete an existing application."""

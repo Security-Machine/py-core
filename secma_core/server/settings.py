@@ -1,6 +1,6 @@
 """Server settings."""
 import os
-from typing import List, Optional
+from typing import Any, Callable, List, cast
 
 from db4me import AllDatabaseSettings
 from log4me import LogSettings
@@ -22,23 +22,22 @@ class ManagementSettings(BaseModel):
         ...,
         description="The secret used to sign the JWT tokens.",
     )
-    token_algorithm: Optional[str] = Field(
+    token_algorithm: str = Field(
         "HS256",
         description="The algorithm used to sign the JWT tokens.",
     )
-    token_expiration: Optional[int] = Field(
+    token_expiration: float = Field(
         30,
         description="The expiration time of the JWT tokens in minutes.",
     )
 
-    super_role: Optional[str] = Field(
+    super_role: str = Field(
         "super",
         description=(
-            "The name of the super role that will get "
-            "all known permissions."
+            "The name of the super role that will get " "all known permissions."
         ),
     )
-    super_user: Optional[str] = Field(
+    super_user: str = Field(
         "super-user",
         description=(
             "The name of user that will always exist in the management app "
@@ -85,7 +84,8 @@ class Settings(YamlBaseSettings):
     )
 
     log: LogSettings = Field(
-        default_factory=LogSettings, description="Logging settings."
+        default_factory=cast(Callable[[], Any], LogSettings),
+        description="Logging settings.",
     )
 
     database: AllDatabaseSettings = Field(
@@ -93,11 +93,11 @@ class Settings(YamlBaseSettings):
     )
 
     management: ManagementSettings = Field(
-        default_factory=ManagementSettings,
+        default_factory=cast(Callable[[], Any], ManagementSettings),
         description="Management settings.",
     )
 
     net: NetworkSettings = Field(
-        default_factory=NetworkSettings,
+        default_factory=cast(Callable[[], Any], NetworkSettings),
         description="CORS settings.",
     )

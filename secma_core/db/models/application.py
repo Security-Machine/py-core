@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, Optional, Set
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -24,7 +25,8 @@ class Application(Common, Base):
     __table_suffix__ = "applications"
     title: Mapped[Optional[str]] = mapped_column(
         String(255),
-        comment="A title for the application.", default=None,
+        comment="A title for the application.",
+        default=None,
     )
     slug: Mapped[str] = mapped_column(
         unique=True, index=True, comment="Application unique slug used in URL."

@@ -49,11 +49,15 @@ async def init_db(
         role: The name of the role that includes all permissions.
     """
     import secma_core.db.models.api  # noqa: F401
+
     with session.no_autoflush:
         # Ensure that the app exists.
-        db_app, is_app_new = await session.scalar(
-            select(Application).filter(Application.slug == app)
-        ), False
+        db_app, is_app_new = (
+            await session.scalar(
+                select(Application).filter(Application.slug == app)
+            ),
+            False,
+        )
         if db_app is None:
             db_app = Application(slug=app)
             session.add(db_app)
@@ -62,12 +66,15 @@ async def init_db(
         # Ensure that the tenant exists.
         db_tenant = None
         if not is_app_new:
-            db_tenant, is_t_new = await session.scalar(
-                select(Tenant).filter(
-                    Tenant.slug == tenant,
-                    Tenant.application_id == db_app.id,
-                )
-            ), False
+            db_tenant, is_t_new = (
+                await session.scalar(
+                    select(Tenant).filter(
+                        Tenant.slug == tenant,
+                        Tenant.application_id == db_app.id,
+                    )
+                ),
+                False,
+            )
         if db_tenant is None:
             db_tenant = Tenant(slug=tenant, application=db_app)
             session.add(db_tenant)
@@ -76,14 +83,19 @@ async def init_db(
         # Ensure that the super-user exists.
         db_user = None
         if not is_t_new:
-            db_user, is_u_new = await session.scalar(
-                select(User).filter(
-                    User.name == user,
-                    User.tenant_id == db_tenant.id,
-                ).options(
-                    joinedload(User.roles),
-                )
-            ), False
+            db_user, is_u_new = (
+                await session.scalar(
+                    select(User)
+                    .filter(
+                        User.name == user,
+                        User.tenant_id == db_tenant.id,
+                    )
+                    .options(
+                        joinedload(User.roles),
+                    )
+                ),
+                False,
+            )
         if db_user is None:
             db_user = User(name=user, tenant=db_tenant, password=password)
             session.add(db_user)
@@ -92,14 +104,19 @@ async def init_db(
         # Ensure that the super-role exists.
         db_role = None
         if not is_t_new:
-            db_role, is_r_new = await session.scalar(
-                select(Role).filter(
-                    Role.name == role,
-                    Role.tenant_id == db_tenant.id,
-                ).options(
-                    joinedload(Role.perms),
-                )
-            ), False
+            db_role, is_r_new = (
+                await session.scalar(
+                    select(Role)
+                    .filter(
+                        Role.name == role,
+                        Role.tenant_id == db_tenant.id,
+                    )
+                    .options(
+                        joinedload(Role.perms),
+                    )
+                ),
+                False,
+            )
         if db_role is None:
             db_role = Role(name=role, tenant=db_tenant)
             session.add(db_role)
@@ -110,12 +127,15 @@ async def init_db(
         for perm, description in perms.items():
             db_perm = None
             if not is_t_new:
-                db_perm, is_p_new = await session.scalar(
-                    select(Permission).filter(
-                        Permission.name == perm,
-                        Permission.tenant_id == db_tenant.id,
-                    )
-                ), False
+                db_perm, is_p_new = (
+                    await session.scalar(
+                        select(Permission).filter(
+                            Permission.name == perm,
+                            Permission.tenant_id == db_tenant.id,
+                        )
+                    ),
+                    False,
+                )
             if db_perm is None:
                 db_perm = Permission(
                     name=perm, description=description, tenant=db_tenant

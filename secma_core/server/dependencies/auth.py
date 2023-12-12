@@ -1,13 +1,13 @@
 from logging import Logger
-from typing import Annotated, List
+from typing import Annotated, Any
 from uuid import uuid4
 
 from fastapi import Depends, Request, Security, status
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from jose import JWTError, jwt
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm import joinedload
+from sqlalchemy.orm.exc import NoResultFound
 
 from secma_core.db.models.role import Role
 from secma_core.db.models.user import User
@@ -122,8 +122,9 @@ async def get_current_user(
 
     # Locate requested user.
     user_query = await session.execute(
-        select_user_by_slug(MANAGEMENT_APP, MANAGEMENT_TENANT, name=username)
-        .options(
+        select_user_by_slug(
+            MANAGEMENT_APP, MANAGEMENT_TENANT, name=username
+        ).options(
             joinedload(User.roles),
             joinedload(User.roles).joinedload(Role.perms),
         )
@@ -136,9 +137,7 @@ async def get_current_user(
 
     # Make sure it is not suspended.
     if user.suspended:
-        raise auth_error(
-            logger, permissions, f"User `{username}` is suspended"
-        )
+        raise auth_error(logger, permissions, f"User `{username}` is suspended")
 
     # Go through all permissions and check that the token has them.
     if not req_perm.issubset(token_scopes):
@@ -176,7 +175,7 @@ async def get_current_user(
 AuthUserDep = Annotated[User, Depends(get_current_user)]
 
 
-def CoreSecurity(*args: str) -> List[str]:
+def CoreSecurity(*args: str) -> Any:
     """Dependency that checks the permissions of the user.
 
     Args:

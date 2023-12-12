@@ -48,12 +48,8 @@ class Permission(Common, Base):
         "Role",
         back_populates="perms",
         secondary=f"{tables_prefix}perm2role",
-        primaryjoin=(
-            f"{tables_prefix}perm2role.c.perm_id == Permission.id"
-        ),
-        secondaryjoin=(
-            f"{tables_prefix}perm2role.c.role_id == Role.id"
-        ),
+        primaryjoin=(f"{tables_prefix}perm2role.c.perm_id == Permission.id"),
+        secondaryjoin=(f"{tables_prefix}perm2role.c.role_id == Role.id"),
     )
 
     def __repr__(self):

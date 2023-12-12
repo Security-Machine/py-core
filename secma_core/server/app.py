@@ -7,12 +7,10 @@ import pkgutil
 from typing import Any, Optional
 
 from fastapi import FastAPI
-from pydantic import BaseModel, Field
 
 from secma_core.schemas.errors import ErrorResponse
 
 app: Optional[FastAPI] = None
-
 
 
 def create_app(lifespan: Any, set_global: bool = False) -> FastAPI:
