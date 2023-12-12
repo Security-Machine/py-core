@@ -22,9 +22,9 @@ dependencies = [
 
 [project.optional-dependencies]
 server = [
-    "passlib[bcrypt]==1.7.4",
     "fastapi==0.104.1",
     "log4me==0.1.0",
+    "passlib[bcrypt]==1.7.4",
     "pydantic_settings==2.1.0",
     "pydantic-settings-yaml==0.2.0",
     "pydantic==2.5.2",
@@ -34,39 +34,41 @@ server = [
 ]
 dev = [
     "black",
+    "build",
     "flake8",
     "isort",
     "mypy",
+    "pre-commit",
+    "pyproject-flake8",
     "pytest-cov",
     "pytest-mock",
     "pytest",
     "twine",
     "wheel",
-    "pyproject-flake8",
 ]
 tests = [
     "black",
     "flake8",
     "isort",
     "mypy",
+    "pyproject-flake8",
     "pytest-cov",
     "pytest-mock",
     "pytest",
     "twine",
     "uvicorn[standard]",
     "wheel",
-    "pyproject-flake8",
 ]
 docs = [
-    "mkdocs",
+    "cairosvg",
     "markdown-include",
     "mkdocs-material",
     "mkdocs-material[imaging]",
+    "mkdocs",
     "mkdocstrings",
     "mkdocstrings[python]",
-    "pymdown-extensions",
     "pillow",
-    "cairosvg",
+    "pymdown-extensions",
 ]
 
 
