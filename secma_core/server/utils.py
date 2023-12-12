@@ -4,12 +4,13 @@ from typing import Literal, Optional
 from fastapi.responses import JSONResponse
 from pydantic import Field
 
-from secma_core.server.exceptions import HtmlError
+from secma_core.server.exceptions import HttpError
 from secma_core.server.messages import get_err, get_json_err
 
+# Type that indicates the return format for some function.
 ErrorMode = Literal["json", "html"]
 
-
+# Common fields for the models.
 SlugField = Field(
     ...,
     title="A string identifier unique among its peers.",
@@ -21,6 +22,8 @@ SlugField = Field(
     ),
 )
 
+
+# Regular expression for the user name validation.
 user_regex = re.compile(r"^[a-z0-9\-_]+$")
 
 
@@ -78,7 +81,7 @@ def no_app(app_slug: str, mode: ErrorMode = "json"):
             content=error.model_dump(),
         )
     elif mode == "html":
-        return HtmlError(status_code=404, data=error)
+        return HttpError(status_code=404, data=error)
     else:
         raise ValueError(f"Invalid mode: {mode}")
 
@@ -105,7 +108,7 @@ def no_role(role_id: int, mode: ErrorMode = "json"):
             content=error.model_dump(),
         )
     elif mode == "html":
-        return HtmlError(status_code=404, data=error)
+        return HttpError(status_code=404, data=error)
     else:
         raise ValueError(f"Invalid mode: {mode}")
 
@@ -122,6 +125,6 @@ def no_user(user_id: int, mode: ErrorMode = "json"):
             content=error.model_dump(),
         )
     elif mode == "html":
-        return HtmlError(status_code=404, data=error)
+        return HttpError(status_code=404, data=error)
     else:
         raise ValueError(f"Invalid mode: {mode}")

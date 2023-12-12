@@ -1,4 +1,4 @@
-
+prune ./.github/*
 exclude ./.coveragerc
 exclude ./.dockerignore
 exclude ./.editorconfig
@@ -7,5 +7,13 @@ exclude ./.pre-commit-config.yaml
 exclude ./.readthedocs.yml
 exclude ./Dockerfile
 exclude ./Makefile
-exclude ./.vscode/launch.json
-exclude ./.vscode/settings.json
+exclude ./.vscode/*
+exclude ./tests/*
+exclude ./docs/*
+exclude ./build/*
+exclude ./dist/*
+exclude ./htmlcov/*
+exclude ./site/*
+exclude ./.cache/*
+exclude ./.mypy_cache/*
+exclude ./mkdocs.yml

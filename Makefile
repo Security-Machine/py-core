@@ -32,7 +32,7 @@ run:
 		--port 8989
 
 
-all: test build build-docs
+all: test build-dist build-docs
 
 
 sdist:
@@ -60,6 +60,7 @@ typecheck:
 
 test: lint typecheck
 	python -m pytest \
+	    -v \
 		--cov-report term \
 		--cov-report html \
 		--cov-config=.coveragerc \

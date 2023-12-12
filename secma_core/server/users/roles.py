@@ -9,7 +9,10 @@ from sqlalchemy.orm.exc import NoResultFound
 from secma_core.db.models.role import Role
 from secma_core.db.models.user import User
 from secma_core.db.selectors import select_role_by_slug
-from secma_core.server.dependencies.user import UserContextDep, UserIdContextDep
+from secma_core.server.dependencies.user import (
+    UserContextDep,
+    UserIdContextDep,
+)
 from secma_core.server.utils import no_role
 
 from ..constants import e404

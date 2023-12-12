@@ -17,7 +17,7 @@ from secma_core.server.constants import (
     MANAGEMENT_PERMS,
     MANAGEMENT_TENANT,
 )
-from secma_core.server.exceptions import HtmlError
+from secma_core.server.exceptions import HttpError
 from secma_core.server.messages import get_err
 from secma_core.server.settings import ManagementSettings
 
@@ -70,7 +70,7 @@ def auth_error(
     logger.error("%s - %s", message, detail.message, exc_info=exc_info)
 
     # Return the error to be raised by the caller.
-    return HtmlError(
+    return HttpError(
         status_code=status.HTTP_401_UNAUTHORIZED,
         data=detail,
         headers={"WWW-Authenticate": authenticate_value},
@@ -137,7 +137,9 @@ async def get_current_user(
 
     # Make sure it is not suspended.
     if user.suspended:
-        raise auth_error(logger, permissions, f"User `{username}` is suspended")
+        raise auth_error(
+            logger, permissions, f"User `{username}` is suspended"
+        )
 
     # Go through all permissions and check that the token has them.
     if not req_perm.issubset(token_scopes):

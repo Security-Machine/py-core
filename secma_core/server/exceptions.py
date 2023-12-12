@@ -5,8 +5,8 @@ from fastapi.responses import JSONResponse
 from secma_core.schemas.errors import ErrorResponse
 
 
-class HtmlError(Exception):
-    """Exception raised for errors that will generate a html response.
+class HttpError(Exception):
+    """Exception raised for errors that will generate a HTTP response.
 
     Use this instead of the standard HTTPException class to avoid
     wrapping the error in a `details` member.
@@ -25,7 +25,10 @@ class HtmlError(Exception):
     ):
         self.data = data
         self.status_code = status_code
-        self.headers = headers
+        self.headers = {
+            **(headers if headers else {}),
+            "Content-Type": "application/json",
+        }
 
     @property
     def message(self) -> str:

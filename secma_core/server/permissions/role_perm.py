@@ -8,7 +8,10 @@ from sqlalchemy.orm.exc import NoResultFound
 from secma_core.db.models.permission import Permission
 from secma_core.db.models.role import Role
 from secma_core.db.selectors import select_perm_by_slug
-from secma_core.server.dependencies.role import RoleContextDep, RoleIdContextDep
+from secma_core.server.dependencies.role import (
+    RoleContextDep,
+    RoleIdContextDep,
+)
 from secma_core.server.permissions.permission import no_perm
 
 from ..constants import e404

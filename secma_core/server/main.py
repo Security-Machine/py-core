@@ -12,7 +12,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.utils import is_body_allowed_for_status_code
-from log4me import setup_logging
+from log2me import setup_logging
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
 
 from secma_core.db.main import connect_to_database
@@ -22,7 +22,7 @@ from secma_core.server.constants import (
     MANAGEMENT_PERMS,
     MANAGEMENT_TENANT,
 )
-from secma_core.server.exceptions import HtmlError
+from secma_core.server.exceptions import HttpError
 from secma_core.server.settings import Settings
 
 
@@ -100,8 +100,8 @@ app.add_middleware(
 )
 
 
-@app.exception_handler(HtmlError)
-async def html_exception_handler(request: Request, exc: HtmlError):
+@app.exception_handler(HttpError)
+async def html_exception_handler(request: Request, exc: HttpError):
     """Handle HTML errors."""
     if not is_body_allowed_for_status_code(exc.status_code):
         return Response(status_code=exc.status_code, headers=exc.headers)

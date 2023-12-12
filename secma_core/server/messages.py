@@ -5,7 +5,9 @@ from fastapi.responses import JSONResponse
 from secma_core.schemas.errors import ErrorResponse
 
 messages = {
-    "duplicate-app": ("An application with a `{appSlug}` slug already exists."),
+    "duplicate-app": (
+        "An application with a `{appSlug}` slug already exists."
+    ),
     "no-role": ("No role with a `{roleId}` ID was found withing this tenant."),
     "no-app": ("No application with a `{appSlug}` slug was found."),
     "no-user": ("No user with a `{userId}` ID was found withing this tenant."),
@@ -35,7 +37,9 @@ def get_err(
     message = messages[code]
     if params:
         message = message.format(**params)
-    return ErrorResponse(message=message, code=code, field=field, params=params)
+    return ErrorResponse(
+        message=message, code=code, field=field, params=params
+    )
 
 
 def get_json_err(

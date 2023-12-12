@@ -81,7 +81,9 @@ async def get_permissions(
 ):
     """Get a list of all unique permission IDs in a tenant."""
     results = await context.session.scalars(
-        select_perm_by_slug(app_slug, tn_slug).options(load_only(Permission.id))
+        select_perm_by_slug(app_slug, tn_slug).options(
+            load_only(Permission.id)
+        )
     )
     return [x.id for x in results]
 

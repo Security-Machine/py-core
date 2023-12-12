@@ -3,7 +3,7 @@ import os
 from typing import Any, Callable, List, cast
 
 from db4me import AllDatabaseSettings
-from log4me import LogSettings
+from log2me import LogSettings
 from pydantic import BaseModel, Field
 from pydantic_settings import SettingsConfigDict
 from pydantic_settings_yaml import YamlBaseSettings
@@ -34,7 +34,8 @@ class ManagementSettings(BaseModel):
     super_role: str = Field(
         "super",
         description=(
-            "The name of the super role that will get " "all known permissions."
+            "The name of the super role that will get "
+            "all known permissions."
         ),
     )
     super_user: str = Field(
