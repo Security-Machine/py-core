@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import os
+from asyncio import sleep
 from contextlib import contextmanager
 
 from alembic import command
 from alembic.config import Config
 from db4me import AllDatabaseSettings, get_engine
-from sqlalchemy import Engine
+from sqlalchemy import Engine, MetaData
 
 from secma_core.db.models.api import Base
 
@@ -61,6 +62,12 @@ def run_migrations(engine: Engine):
         command.upgrade(alembic_cfg, "head")
 
 
+def sync_tables(sync_engine: Engine):
+    metadata_obj = MetaData()
+    metadata_obj.reflect(bind=sync_engine)
+    return [table.name for table in metadata_obj.sorted_tables]
+
+
 async def connect_to_database(settings: AllDatabaseSettings):
     """Connect to the database.
 
@@ -69,10 +76,6 @@ async def connect_to_database(settings: AllDatabaseSettings):
     Returns:
         The connection to the database.
     """
-    engine = get_engine(settings, is_async=True)
-    async with engine.begin() as conn:
-        table_names = await conn.run_sync(engine.dialect.get_table_names)
-
     # I was unable to make alembic use the async engine.
     # So, if we are using an async engine, we need to use
     # a sync alternative for this part.
@@ -81,10 +84,21 @@ async def connect_to_database(settings: AllDatabaseSettings):
             "A sync_alternative is required in database settings "
             "for async connections"
         )
-    sync_engine = get_engine(settings, is_async=False)
-    if not table_names:
+    sync_engine: Engine = get_engine(settings, is_async=False)
+    sync_table_names = sync_tables(sync_engine)
+
+    if not sync_table_names:
         create_tables(sync_engine)
     else:
         run_migrations(sync_engine)
+    await sleep(0.5)
+
+    engine = get_engine(settings, is_async=True)
+
+    # Make sure the async engine is working.
+    async with engine.begin() as conn:
+        table_names = await conn.run_sync(engine.dialect.get_table_names)
+    sync_table_names = sync_tables(sync_engine)
+    assert len(table_names) == len(sync_table_names)
 
     return engine

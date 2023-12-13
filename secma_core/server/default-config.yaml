@@ -38,7 +38,7 @@ database:
         url: sqlite+aiosqlite:///file:defaultSecMa?mode=memory&cache=shared&uri=true
 
         # Database echo
-        echo:  true
+        echo:  false
 
         # Database pool size
         pool_size:  10

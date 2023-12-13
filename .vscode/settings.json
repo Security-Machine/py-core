@@ -1,20 +1,22 @@
 {
     "cSpell.words": [
-        "aiosqlite",
-        "autoflush",
-        "cairocffi",
-        "joinedload",
-        "onupdate",
-        "passlib",
-        "pipwin",
-        "primaryjoin",
-        "secma",
-        "secondaryjoin",
-        "selectinload",
-        "sessionmaker"
+      "aiosqlite",
+      "autoflush",
+      "cairocffi",
+      "joinedload",
+      "onupdate",
+      "passlib",
+      "pipwin",
+      "primaryjoin",
+      "redoc",
+      "secma",
+      "secondaryjoin",
+      "selectinload",
+      "sessionmaker",
+      "setenv"
     ],
     "python.testing.pytestArgs": [
-      "secma_core"
+      "secma_core", "tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true

@@ -23,7 +23,9 @@ requires-python = ">=3.9"
 dev = [
   "black",
   "build",
+  "factory_boy",
   "flake8",
+  "httpx",
   "isort",
   "mypy",
   "pre-commit",
@@ -31,6 +33,7 @@ dev = [
   "pytest-cov",
   "pytest-mock",
   "pytest",
+  "pytest-asyncio",
   "twine",
   "wheel",
 ]
@@ -58,12 +61,15 @@ server = [
 ]
 tests = [
   "black",
+  "factory_boy",
   "flake8",
+  "httpx",
   "isort",
   "mypy",
   "pyproject-flake8",
   "pytest-cov",
   "pytest-mock",
+  "pytest-asyncio",
   "pytest",
   "twine",
   "uvicorn[standard]",
@@ -124,7 +130,7 @@ python_files = [
 ]
 python_functions = ["test"]
 testpaths = [
-  "secma_core",
+  "secma_core", "tests"
 ]
 
 [tool.mypy]

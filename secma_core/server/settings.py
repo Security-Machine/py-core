@@ -4,7 +4,7 @@ from typing import Any, Callable, List, cast
 
 from db4me import AllDatabaseSettings
 from log2me import LogSettings
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, SecretStr
 from pydantic_settings import SettingsConfigDict
 from pydantic_settings_yaml import YamlBaseSettings
 
@@ -18,7 +18,7 @@ class YamlSettingsConfigDict(SettingsConfigDict):
 
 
 class ManagementSettings(BaseModel):
-    token_secret: str = Field(
+    token_secret: SecretStr = Field(
         ...,
         description="The secret used to sign the JWT tokens.",
     )
@@ -45,7 +45,7 @@ class ManagementSettings(BaseModel):
             "and will have all permissions."
         ),
     )
-    super_password: str = Field(
+    super_password: SecretStr = Field(
         ...,
         description=("The password of the super-user."),
     )
@@ -90,6 +90,7 @@ class Settings(YamlBaseSettings):
     )
 
     database: AllDatabaseSettings = Field(
+        default_factory=cast(Callable[[], Any], AllDatabaseSettings),
         description="Database settings.",
     )
 

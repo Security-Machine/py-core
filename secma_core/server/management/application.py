@@ -14,7 +14,7 @@ from secma_core.server.dependencies.auth import CoreSecurity
 from secma_core.server.dependencies.context import ContextDep
 from secma_core.server.utils import duplicate_app, no_app
 
-from ..constants import e404, e409
+from ..constants import MANAGEMENT_APP, e404, e409
 from . import router
 
 my_router = APIRouter(
@@ -156,7 +156,10 @@ async def delete_app(context: ContextDep, app_slug: str):
     """Delete an existing application."""
     # Locate requested record.
     query = await context.session.execute(
-        select(Application).where(Application.slug == app_slug)
+        select(Application).where(
+            Application.slug == app_slug,
+            Application.slug != MANAGEMENT_APP,
+        )
     )
     try:
         result = query.scalar_one()

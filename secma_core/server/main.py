@@ -45,6 +45,7 @@ async def lifespan(local_app: FastAPI):
 
     # Get the engine (database connection) and session factory.
     engine = cast(AsyncEngine, await connect_to_database(settings.database))
+
     async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
 
     # Save data in the app state so it's accessible everywhere else.
@@ -65,7 +66,9 @@ async def lifespan(local_app: FastAPI):
                 tenant=MANAGEMENT_TENANT,
                 perms=MANAGEMENT_PERMS,
                 user=m_stg.super_user,
-                password=pwd_context.hash(m_stg.super_password),
+                password=pwd_context.hash(
+                    m_stg.super_password.get_secret_value()
+                ),
                 role=m_stg.super_role,
             )
     except Exception:
@@ -73,6 +76,7 @@ async def lifespan(local_app: FastAPI):
             "Failed to initialize the database."
         )
         raise
+
     # Run the app.
     yield
 

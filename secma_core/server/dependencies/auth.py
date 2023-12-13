@@ -105,7 +105,9 @@ async def get_current_user(
     # Extract data from token.
     try:
         payload = jwt.decode(
-            token, settings.token_secret, algorithms=[settings.token_algorithm]
+            token,
+            settings.token_secret.get_secret_value(),
+            algorithms=[settings.token_algorithm],
         )
     except JWTError:
         raise auth_error(
@@ -118,7 +120,9 @@ async def get_current_user(
     if not username:
         raise auth_error(logger, permissions, "No username in token")
     if len(token_scopes) == 0:
-        raise auth_error(logger, permissions, "No permissions in token")
+        raise auth_error(
+            logger, permissions, "No permissions in token", is_auth=False
+        )
 
     # Locate requested user.
     user_query = await session.execute(

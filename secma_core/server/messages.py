@@ -8,13 +8,13 @@ messages = {
     "duplicate-app": (
         "An application with a `{appSlug}` slug already exists."
     ),
-    "no-role": ("No role with a `{roleId}` ID was found withing this tenant."),
-    "no-app": ("No application with a `{appSlug}` slug was found."),
-    "no-user": ("No user with a `{userId}` ID was found withing this tenant."),
+    "no-role": "No role with a `{roleId}` ID was found withing this tenant.",
+    "no-app": "No application with a `{appSlug}` slug was found.",
+    "no-user": "No user with a `{userId}` ID was found withing this tenant.",
     "invalid-credentials": (
         "Could not validate credentials (trace ID: {uniqueId})."
     ),
-    "no-permission": ("Not enough permissions (trace ID: {uniqueId})."),
+    "no-permission": "Not enough permissions (trace ID: {uniqueId}).",
 }
 
 
@@ -33,6 +33,9 @@ def get_err(
     Returns:
         ErrorResponse: The error response model. The message is populated
             by using the code to look up the message in the messages dict.
+
+    Raises:
+        KeyError: If the code is not found in the messages dict.
     """
     message = messages[code]
     if params:

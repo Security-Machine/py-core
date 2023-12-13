@@ -26,6 +26,9 @@ SlugField = Field(
 # Regular expression for the user name validation.
 user_regex = re.compile(r"^[a-z0-9\-_]+$")
 
+# Regular expression for the slug validation.
+slug_regex = re.compile(r"^[a-z0-9\-_]+$")
+
 
 def string_is_valid(v: str, max_len: Optional[int] = None) -> str:
     """Validate the string."""
@@ -42,14 +45,17 @@ def slug_is_valid(v: str) -> str:
     """Validate the slug."""
     if not v.islower():
         raise ValueError("The slug must be lowercase.")
-    if not v.isalnum():
-        raise ValueError("The slug must be alphanumeric.")
     if len(v) < 3:
         raise ValueError(
             "The slug must be at least three characters in length."
         )
     if len(v) > 255:
         raise ValueError("The slug must be less than 255 characters.")
+    if not slug_regex.match(v):
+        raise ValueError(
+            "The slug can include letters, numbers, underscore (_) "
+            "and minus (-) characters."
+        )
     return v
 
 

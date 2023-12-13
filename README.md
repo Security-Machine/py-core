@@ -105,7 +105,7 @@ pipwin install cairocffi
 ```
 
 To run the server you have to launch the `secma_core.server.main` script.
-You have a few ways of doing that:
+You have a few ways of doing that at your disposal:
 
 - with reload
 
@@ -124,3 +124,8 @@ You have a few ways of doing that:
     # Run the container
     docker run -it --rm -p 127.0.0.1:8080:8989 secma-core
     ```
+
+Once up, the server will make API documentation available at
+[127.0.0.1:8989/docs](http://127.0.0.1:8989/docs) and at
+[127.0.0.1:8989/redoc](http://127.0.0.1:8989/redoc); the JSON format is
+also [available](http://localhost:8989/openapi.json).
