@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Annotated, Any, Dict, Union, cast
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Path
 from fastapi.security import OAuth2PasswordRequestForm, SecurityScopes
 from jose import jwt
 from passlib.context import CryptContext
@@ -15,7 +15,7 @@ from secma_core.db.selectors import select_user_by_slug
 from secma_core.server.app import app
 from secma_core.server.constants import MANAGEMENT_APP, MANAGEMENT_TENANT
 from secma_core.server.dependencies.auth import auth_error
-from secma_core.server.dependencies.context import ContextDep
+from secma_core.server.dependencies.context import Context, ContextDep
 from secma_core.server.settings import ManagementSettings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -54,17 +54,16 @@ def create_access_token(
     return encoded_jwt
 
 
-@app.post("/token", response_model=Token)
-async def login(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    context: ContextDep,
+async def common_login(
+    context: Context, form_data: Any, app_slug: str, tenant: str
 ):
-    """Get a token that can be later used to authenticate requests.
+    """Common login function.
 
     Args:
-        form_data: The user-provided data.
         context: The context.
-
+        form_data: The user-provided data.
+        app_slug: The application slug.
+        tenant: The tenant slug.
     Returns:
         The token.
     """
@@ -74,9 +73,7 @@ async def login(
 
     # Locate requested user.
     user_query = await context.session.execute(
-        select_user_by_slug(
-            MANAGEMENT_APP, MANAGEMENT_TENANT, name=form_data.username
-        ).options(
+        select_user_by_slug(app_slug, tenant, name=form_data.username).options(
             joinedload(User.roles),
             joinedload(User.roles).joinedload(Role.perms),
         )
@@ -118,3 +115,46 @@ async def login(
         settings=context.settings.management,
     )
     return {"access_token": token, "token_type": "bearer"}
+
+
+@app.post("/token/{app_slug}/{tenant}", response_model=Token)
+async def login(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    context: ContextDep,
+    app_slug: str = Path(
+        ..., title="The name of the application where the tenant belongs."
+    ),
+    tenant: str = Path(
+        ...,
+        title="The name of the tenant where the user belongs.",
+    ),
+):
+    """Get a token that can be later used to authenticate requests.
+
+    Args:
+        form_data: The user-provided data.
+        context: The context.
+
+    Returns:
+        The token.
+    """
+    return await common_login(context, form_data, app_slug, tenant)
+
+
+@app.post("/token", response_model=Token)
+async def management_login(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    context: ContextDep,
+):
+    """Get a token that can be later used to authenticate requests.
+
+    Args:
+        form_data: The user-provided data.
+        context: The context.
+
+    Returns:
+        The token.
+    """
+    return await common_login(
+        context, form_data, MANAGEMENT_APP, MANAGEMENT_TENANT
+    )
