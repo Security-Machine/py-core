@@ -61,14 +61,14 @@ def slug_is_valid(v: str) -> str:
 
 def user_name_is_valid(v: str) -> str:
     """Validate the unique identifier of the user."""
-    if not v.islower():
-        raise ValueError("The user name must be lowercase.")
-    if not user_regex.match(v):
-        raise ValueError(
-            "The user name can include letters, numbers, underscore (_) "
-            "and minus (-) characters."
-        )
-    if len(v) == 0:
+    # if not v.islower():
+    #     raise ValueError("The user name must be lowercase.")
+    # if not user_regex.match(v):
+    #     raise ValueError(
+    #         "The user name can include letters, numbers, underscore (_) "
+    #         "and minus (-) characters."
+    #     )
+    if len(v) < 3:
         raise ValueError("The user name must be non-empty.")
     if len(v) > 255:
         raise ValueError("The user name must be less than 255 characters.")

@@ -13,6 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.utils import is_body_allowed_for_status_code
 from log2me import setup_logging
+from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker
 
 from secma_core.db.main import connect_to_database
@@ -47,15 +48,16 @@ async def lifespan(local_app: FastAPI):
     engine = cast(AsyncEngine, await connect_to_database(settings.database))
 
     async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
     # Save data in the app state so it's accessible everywhere else.
     local_app.extra["engine"] = engine
     local_app.extra["async_session"] = async_session
     local_app.extra["settings"] = settings
+    local_app.extra["pwd_context"] = pwd_context
 
     # Ensure that the database has minimum required data to operate.
     from secma_core.db.init_db import init_db
-    from secma_core.server.management.auth import pwd_context
 
     try:
         m_stg = settings.management

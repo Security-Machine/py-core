@@ -8,9 +8,9 @@ from secma_core.db.models.mixins import Common
 from .base import Base, tables_prefix
 
 if TYPE_CHECKING:
-    from .permission import Permission
-    from .tenant import Tenant
-    from .user import User
+    from .permission import Permission  # noqa: F401
+    from .tenant import Tenant  # noqa: F401
+    from .user import User  # noqa: F401
 
 
 perm2role = Table(
@@ -66,3 +66,14 @@ class Role(Common, Base):
 
     def __repr__(self):
         return "<Role('%s', '%s')>" % (self.id, self.name)
+
+    def get_permission_names(self) -> Set[str]:
+        """Return the permissions associated with this role.
+
+        You may want to load the role using the `joinedload(Role.permissions)`
+        option to avoid extra queries.
+
+        Returns:
+            The permissions names.
+        """
+        return [p.name for p in self.perms]

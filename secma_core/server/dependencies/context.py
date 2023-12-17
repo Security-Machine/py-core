@@ -3,7 +3,8 @@ from typing import Annotated
 
 from attrs import define
 from fastapi import Depends, Request
-from sqlalchemy.ext.asyncio import AsyncSession
+from passlib.context import CryptContext
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from ..settings import Settings
 
@@ -21,8 +22,22 @@ class Context:
 
     request: Request
     session: AsyncSession
-    settings: Settings
     logger: Logger
+
+    @property
+    def pwd_context(self) -> CryptContext:
+        """The password context."""
+        return self.request.app.extra["pwd_context"]
+
+    @property
+    def engine(self) -> AsyncEngine:
+        """The database engine."""
+        return self.request.app.extra["engine"]
+
+    @property
+    def settings(self) -> Settings:
+        """The database engine."""
+        return self.request.app.extra["settings"]
 
 
 def get_context(request: Request) -> Context:
@@ -39,7 +54,6 @@ def get_context(request: Request) -> Context:
     return Context(
         request=request,
         session=request.state.session,
-        settings=request.state.settings,
         logger=request.state.logger,
     )
 

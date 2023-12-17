@@ -1,6 +1,6 @@
 """Server settings."""
 import os
-from typing import Any, Callable, List, cast
+from typing import Any, Callable, List, Optional, cast
 
 from db4me import AllDatabaseSettings
 from log2me import LogSettings
@@ -70,6 +70,25 @@ class NetworkSettings(BaseModel):
     )
 
 
+class EmailPassword(BaseModel):
+    """Settings related to authentication using email and password."""
+
+    allow_login: bool = Field(
+        True,
+        description="Whether to allow users to login.",
+    )
+    allow_signup: bool = Field(
+        True,
+        description=(
+            "Whether to allow users to sign up using email and password.",
+        ),
+    )
+    default_user_role: Optional[str] = Field(
+        None,
+        description=("The default role assigned to users when they sign up.",),
+    )
+
+
 class Settings(YamlBaseSettings):
     """Server settings read from config file and from environment."""
 
@@ -102,4 +121,9 @@ class Settings(YamlBaseSettings):
     net: NetworkSettings = Field(
         default_factory=cast(Callable[[], Any], NetworkSettings),
         description="CORS settings.",
+    )
+
+    ep: EmailPassword = Field(
+        default_factory=cast(Callable[[], Any], EmailPassword),
+        description="Email-password settings.",
     )
