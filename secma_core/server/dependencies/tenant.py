@@ -109,7 +109,6 @@ def get_tenant_context(
     return TenantContext(
         request=request,
         session=request.state.session,
-        settings=request.state.settings,
         app_slug=app_slug,
         tn_slug=tn_slug,
         logger=request.state.logger,

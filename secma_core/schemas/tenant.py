@@ -19,17 +19,17 @@ class Common(BaseModel):
 
     title: Optional[str] = Field(
         default="",
-        description="A title for the application.",
+        description="A title for the tenant.",
     )
 
     description: Optional[str] = Field(
         default="",
-        description="A description of the application.",
+        description="A description of the tenant.",
     )
 
 
-class ApplicationData(Common):
-    """The data provided about an application by the core."""
+class TenantData(Common):
+    """The data provided about a tenant by the core."""
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -44,8 +44,8 @@ class ApplicationData(Common):
     )
 
 
-class ApplicationInput(Common):
-    """The data creating or editing an application."""
+class TenantInput(Common):
+    """The data creating or editing a tenant."""
 
     @field_validator("slug")
     def slug_is_valid(cls, v):

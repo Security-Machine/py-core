@@ -208,7 +208,10 @@ async def signup(
         data={"sub": new_rec.name, "scopes": permissions},
         settings=context.settings.management,
     )
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+    }
 
 
 @app.post("/token", response_model=Token)

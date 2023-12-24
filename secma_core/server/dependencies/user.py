@@ -57,7 +57,6 @@ async def get_user_context(
     return UserContext(
         request=request,
         session=session,
-        settings=request.state.settings,
         logger=logger,
         app_slug=app_slug,
         tn_slug=tn_slug,
@@ -99,7 +98,6 @@ async def get_user_id_context(
     return UserIdContext(
         request=request,
         session=request.state.session,
-        settings=request.state.settings,
         app_slug=app_slug,
         tn_slug=tn_slug,
         user_id=user_id,

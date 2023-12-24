@@ -2,36 +2,19 @@ from typing import List, Union
 
 from fastapi import Body, Path
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, field_validator
 from sqlalchemy.future import select
 from sqlalchemy.orm import load_only
 from sqlalchemy.orm.exc import NoResultFound
 
 from secma_core.db.models.application import Application
 from secma_core.db.models.tenant import Tenant
+from secma_core.schemas.tenant import TenantData, TenantInput
 from secma_core.server.dependencies.app import AppIdArg, AppSlugArg
 from secma_core.server.dependencies.auth import CoreSecurity
 from secma_core.server.dependencies.context import ContextDep
-from secma_core.server.utils import SlugField, slug_is_valid
 
 from ..constants import e404, e409
 from . import router
-
-
-class TenantData(BaseModel):
-    """The data for an tenant.
-
-    This model is used for creating and editing tenants.
-    """
-
-    model_config = {"from_attributes": True}
-
-    slug: str = SlugField
-
-    @field_validator("slug")
-    def slug_is_valid(cls, v):
-        """Validate the slug."""
-        return slug_is_valid(v)
 
 
 def no_tenant(tn_slug: str):
@@ -83,7 +66,7 @@ async def get_tenants(context: ContextDep, app_slug: AppSlugArg):
 async def create_tenant(
     context: ContextDep,
     app_id: AppIdArg,
-    data: TenantData = Body(),
+    data: TenantInput = Body(),
 ) -> Union[TenantData, JSONResponse]:
     """Create a new tenant."""
 
@@ -97,10 +80,16 @@ async def create_tenant(
         return duplicate_tenant(data.slug)
 
     # Create the new tenant.
-    new_app = Tenant(slug=data.slug, application_id=app_id)
-    context.session.add(new_app)
+    new_tenant = Tenant(
+        slug=data.slug,
+        title=data.title,
+        description=data.description,
+        application_id=app_id,
+    )
+    context.session.add(new_tenant)
     await context.session.commit()
-    return TenantData.model_validate(new_app)
+    await context.session.refresh(new_tenant)
+    return TenantData.model_validate(new_tenant)
 
 
 @router.get(
@@ -140,7 +129,7 @@ async def edit_tenant(
     context: ContextDep,
     app_slug: AppSlugArg,
     tn_slug: str,
-    data: TenantData = Body(),
+    data: TenantInput = Body(),
 ):
     """Edit an existing tenant."""
     # Locate requested record.
@@ -168,8 +157,10 @@ async def edit_tenant(
 
     # Update the record.
     result.slug = data.slug
+    result.title = data.title
+    result.description = data.description
     await context.session.commit()
-
+    await context.session.refresh(result)
     return TenantData.model_validate(result)
 
 

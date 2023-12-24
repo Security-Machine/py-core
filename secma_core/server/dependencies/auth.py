@@ -170,7 +170,6 @@ async def get_current_user(
     return UserContext(
         request=request,
         session=session,
-        settings=request.state.settings,
         app_slug=MANAGEMENT_APP,
         tn_slug=MANAGEMENT_TENANT,
         user=user,

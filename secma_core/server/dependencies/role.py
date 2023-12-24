@@ -55,7 +55,6 @@ async def get_role_context(
     return RoleContext(
         request=request,
         session=session,
-        settings=request.state.settings,
         app_slug=app_slug,
         tn_slug=tn_slug,
         role=role,
@@ -97,7 +96,6 @@ async def get_role_id_context(
     return RoleIdContext(
         request=request,
         session=request.state.session,
-        settings=request.state.settings,
         app_slug=app_slug,
         tn_slug=tn_slug,
         role_id=role_id,

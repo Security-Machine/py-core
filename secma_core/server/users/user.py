@@ -2,7 +2,6 @@ from typing import List, Optional, Tuple, Union, cast
 
 from fastapi import APIRouter, Body, Path
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field, field_validator
 from sqlalchemy import func
 from sqlalchemy.future import select
 from sqlalchemy.orm import joinedload, load_only
@@ -13,11 +12,12 @@ from secma_core.db.models.role import Role
 from secma_core.db.models.tenant import Tenant
 from secma_core.db.models.user import User
 from secma_core.db.selectors import select_user_by_slug
+from secma_core.schemas.user import UserData, UserInput
 from secma_core.server.dependencies.app import AppSlugArg
 from secma_core.server.dependencies.auth import AuthUserDep, CoreSecurity
 from secma_core.server.dependencies.context import ContextDep
 from secma_core.server.dependencies.tenant import TenantIdArg, TenantSlugArg
-from secma_core.server.utils import no_user, user_name_is_valid
+from secma_core.server.utils import no_user
 
 from ..constants import e404, e409
 from . import router
@@ -25,28 +25,6 @@ from . import router
 my_router = APIRouter(
     tags=["User Management"],
 )
-
-
-class UserData(BaseModel):
-    """The data associated with an user.
-
-    This model is used for creating and editing users.
-    """
-
-    model_config = {"from_attributes": True}
-
-    name: str = Field(
-        ...,
-        title="A string unique inside parent tenant.",
-        description=(
-            "This needs to be a non-empty, lower case, alpa-numeric string."
-        ),
-    )
-
-    @field_validator("name")
-    def name_is_valid(cls, v):
-        """Validate the name."""
-        return user_name_is_valid(v)
 
 
 def duplicate_user(user_name: str):
@@ -74,7 +52,7 @@ async def get_users(
     results = await context.session.scalars(
         select_user_by_slug(app_slug, tn_slug).options(load_only(User.id))
     )
-    return [x.id for x in results]
+    return [x.name for x in results]
 
 
 async def create_user_impl(
@@ -173,7 +151,7 @@ async def create_user(
     context: ContextDep,
     app_slug: AppSlugArg,
     tn_id: TenantIdArg,
-    data: UserData = Body(),
+    data: UserInput = Body(),
 ) -> Union[UserData, JSONResponse]:
     """Create a new user."""
 
@@ -285,6 +263,8 @@ async def edit_user(
 
     # Update the record.
     result.name = data.name
+    result.description = data.description
+    result.suspended = data.suspended
     await context.session.commit()
 
     return UserData.model_validate(result)
