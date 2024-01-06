@@ -119,11 +119,11 @@ def no_role(role_id: int, mode: ErrorMode = "json"):
         raise ValueError(f"Invalid mode: {mode}")
 
 
-def no_user(user_id: int, mode: ErrorMode = "json"):
+def no_user(user_name: str, mode: ErrorMode = "json"):
     """Return a 404 response for a user that does not exist."""
     error = get_err(
         code="no-user",
-        params={"userId": user_id},
+        params={"userName": user_name},
     )
     if mode == "json":
         return JSONResponse(

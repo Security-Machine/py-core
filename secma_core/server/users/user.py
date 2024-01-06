@@ -41,7 +41,7 @@ def duplicate_user(user_name: str):
 
 
 @my_router.get(
-    "/", response_model=List[int], dependencies=[CoreSecurity("users:r")]
+    "/", response_model=List[str], dependencies=[CoreSecurity("users:r")]
 )
 async def get_users(
     context: ContextDep,
@@ -50,7 +50,7 @@ async def get_users(
 ):
     """Get a list of all unique user IDs available in this application."""
     results = await context.session.scalars(
-        select_user_by_slug(app_slug, tn_slug).options(load_only(User.id))
+        select_user_by_slug(app_slug, tn_slug).options(load_only(User.name))
     )
     return [x.name for x in results]
 
@@ -189,7 +189,7 @@ async def create_user(
 
 
 @my_router.get(
-    "/{user_id}",
+    "/{user_name}",
     responses={**e404},
     response_model=UserData,
     dependencies=[
@@ -200,13 +200,13 @@ async def get_user(
     context: ContextDep,
     app_slug: AppSlugArg,
     tn_slug: TenantSlugArg,
-    user_id: int = Path(..., title="The ID of the user to retrieve."),
+    user_name: str = Path(..., title="The name of the user to retrieve."),
 ):
     """Get information about a specific user."""
     query = await context.session.execute(
         select(User)
         .filter(
-            User.id == user_id,
+            User.name == user_name,
         )
         .join(
             User.tenant,
@@ -224,7 +224,7 @@ async def get_user(
     try:
         result = query.scalar_one()
     except NoResultFound:
-        return no_user(user_id)
+        return no_user(user_name)
     return UserData.model_validate(result)
 
 
